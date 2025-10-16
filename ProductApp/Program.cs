@@ -3,66 +3,60 @@ using Infrastructure.Repositories;
 using Infrastructure.Services;
 using System.Threading.Tasks;
 
-namespace BookApp;
+namespace ProductApp;
 
 public class Program
 {
-    public static async Task Main(string[] args)
+    public static void Main(string[] args)
     {
-        IJsonBookRepository repository = new JsonBookRepository("books.json");
-        IProductService bookService = new BookService(repository);
+        IJsonFileRepository repository = new JsonFileRepository("products.json");
+        IProductService productService = new ProductService(repository);
+        bool running = true;
 
-        bool exit = false;
-        while (!exit)
+        while (running)
         {
             Console.Clear();
-            Console.WriteLine("Meny");
-            Console.WriteLine("1. Add a new book");
-            Console.WriteLine("2. Show booklist");
-            Console.WriteLine("3. Save the booklist");
-            Console.WriteLine("4. Load the booklist");
-            Console.WriteLine("5. Exit");
-            Console.Write("Choose an option: ");
-            string choice = Console.ReadLine();
+            Console.WriteLine("\n--- MENY ---");
+            Console.WriteLine("1. Lägg till en produkt");
+            Console.WriteLine("2. Visa produktlistan");
+            Console.WriteLine("3. Spara produkterna till fil");
+            Console.WriteLine("4. Avsluta");
+            Console.Write("Välj: ");
+
+            var choice = Console.ReadLine();
             switch (choice)
             {
                 case "1":
-                    Console.WriteLine("What is the Title of the book?");
-                    var title = Console.ReadLine();
-                    Console.WriteLine("Who is the Author of the book?");
-                    var author = Console.ReadLine();
-                    Console.WriteLine("What is the Price of the book?");
-                    var priceInput = Console.ReadLine();
-                    if(!decimal.TryParse(priceInput, out decimal price))
-                    {
-                        Console.WriteLine("Invalid price, press any key...");
-                        Console.ReadKey();
+                    Console.WriteLine("Ange produktens namn: ");
+                    var name = Console.ReadLine();
+                    Console.WriteLine("Ange produktens pris:");
+                    // Skapa decimal variabel.
+                    decimal price;
+                    // Om inmatningen är skriven i decimaltyp,
+                    // så konverteras den till price variabeln.
+                    if (decimal.TryParse(Console.ReadLine(), out price))
+                        // Om inmatningen blev decimal så läggs den till i listan.
+                        productService.AddProduct(name!, price);
+                    // Om konverteringen inte funkar blir det fel.
+                    else
+                        Console.WriteLine("Fel, skriv siffror...");
                         break;
-                    }
-                    await bookService.AddBookAsync(title!, author!, price);
-                    Console.WriteLine("Book successfully added, press any key...");
-                    Console.ReadKey();
-                    break;
                 case "2":
-                    await bookService.ShowAllBooksAsync();
-                    Console.WriteLine("Press any key...");
+                    productService.ShowProducts();
+                    Console.WriteLine("Tryck valfri tangent för att fortsätta...");
                     Console.ReadKey();
                     break;
                 case "3":
-                    await bookService.SaveAllBooksToFileAsync();
-                    Console.WriteLine("Books successfully saved, press any key...");
+                    productService.SaveProductsToFile();
+                    Console.WriteLine("Tryck valfri tangent för att fortsätta...");
                     Console.ReadKey();
                     break;
                 case "4":
-                    await bookService.LoadAllBooksFromFileAsync();
-                    Console.WriteLine("Books successfully loaded, press any key...");
-                    Console.ReadKey();
-                    break;
-                case "5":
-                    exit = true;
+                    running = false;
                     break;
                 default:
-                    Console.WriteLine("Invalid option, try again.");
+                    Console.WriteLine("Välj mellan 1-4 i menyn...");
+                    Console.WriteLine("Tryck valfri tangent för att fortsätta...");
                     Console.ReadKey();
                     break;
             }
