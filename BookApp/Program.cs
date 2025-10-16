@@ -3,7 +3,7 @@ using Infrastructure.Repositories;
 using Infrastructure.Services;
 using System.Threading.Tasks;
 
-namespace BookApp;
+namespace ProductApp;
 
 public class Program
 {
@@ -55,7 +55,7 @@ public class Program
                     running = false;
                     break;
                 default:
-                    Console.WriteLine("Välj mellan 1-4 i menyn.");
+                    Console.WriteLine("Välj mellan 1-4 i menyn...");
                     Console.WriteLine("Tryck valfri tangent för att fortsätta...");
                     Console.ReadKey();
                     break;
