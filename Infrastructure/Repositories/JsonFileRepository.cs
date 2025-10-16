@@ -25,11 +25,11 @@ public class JsonFileRepository : IJsonFileRepository
         // "Base"-Katalogen > "Data"-Mappen > JSON-Filen via "filnamnet".
         _filePath = Path.Combine(dataDir, filename);
         // Metod som säkerställer att filvägen och "data"-mappen finns.
-        EnsureInitialized(_filePath, dataDir);
+        EnsureInitialized(dataDir, _filePath);
     }
     // Skapar en metod för att säkerställa att mappen och filvägen blivit skapad.
     // Behöver en filväg och "data"-map för att fungera.
-    public static void EnsureInitialized(string filePath, string dataDir)
+    public static void EnsureInitialized(string dataDir, string filePath)
     {
         // Om inte "Data"-Mappen finns.
         if (!Directory.Exists(dataDir))
@@ -51,6 +51,7 @@ public class JsonFileRepository : IJsonFileRepository
 
     public List<Product> LoadFromFile()
     {
+
         if (!File.Exists(_filePath))
             return new List<Product>();
         // JSON innehållet

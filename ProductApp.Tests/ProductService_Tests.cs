@@ -4,7 +4,7 @@ using Infrastructure.Interfaces;
 using Infrastructure.Repositories;
 using Infrastructure.Models;
 using Infrastructure.Services;
-namespace ProductApp.Tests;
+namespace Infrastructure.Tests;
 
 public class ProductService_Tests
 {
@@ -54,12 +54,18 @@ public class ProductService_Tests
         Assert.Equal("Kaffe", loaded[0].Name);
         Assert.Equal(30.90M, loaded[0].Price);
     }
+    // Metod som testar att produkterna läggs
     public void AddProduct_ShouldRejectInvalidInput()
     {
-        // 
+
         var repo = new JsonFileRepository(_testFilePath);
         var productService = new ProductService(repo);
 
+        productService.AddProduct("", 30);
+        productService.AddProduct("Kaffe", -5);
+        var products = productService.GetProducts();
+        // Assert
+        Assert.Empty(products);
 
     }
 }
