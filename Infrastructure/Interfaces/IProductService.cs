@@ -5,7 +5,7 @@ namespace Infrastructure.Interfaces;
 // Logiken för hur böcker hanteras.
 public interface IProductService
 {
-    // Metod som returnerar en lista produkter.
+    // Metod som returnerar en lista produkter (Används för enhetstestandet).
     List<Product> GetProducts();
     // Metod som sätter namn och pris för att skapa en produkt.
     void AddProduct(string name, decimal price);

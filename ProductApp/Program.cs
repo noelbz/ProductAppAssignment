@@ -27,6 +27,7 @@ public class Program
             switch (choice)
             {
                 case "1":
+                    Console.Clear();
                     Console.WriteLine("Ange produktens namn: ");
                     var name = Console.ReadLine();
                     Console.WriteLine("Ange produktens pris:");
@@ -37,24 +38,30 @@ public class Program
                     if (decimal.TryParse(Console.ReadLine(), out price))
                         // Om inmatningen blev decimal så läggs den till i listan.
                         productService.AddProduct(name!, price);
-                    // Om konverteringen inte funkar blir det fel.
                     else
                         Console.WriteLine("Fel, skriv siffror...");
-                        break;
+
+                    Console.WriteLine("Tryck valfri tangent för att fortsätta...");
+                    Console.ReadKey();
+                    break;
                 case "2":
+                    Console.Clear();
                     productService.ShowProducts();
                     Console.WriteLine("Tryck valfri tangent för att fortsätta...");
                     Console.ReadKey();
                     break;
                 case "3":
+                    Console.Clear();
                     productService.SaveProductsToFile();
                     Console.WriteLine("Tryck valfri tangent för att fortsätta...");
                     Console.ReadKey();
                     break;
                 case "4":
+                    Console.Clear();
                     running = false;
                     break;
                 default:
+                    Console.Clear();
                     Console.WriteLine("Välj mellan 1-4 i menyn...");
                     Console.WriteLine("Tryck valfri tangent för att fortsätta...");
                     Console.ReadKey();

@@ -44,9 +44,7 @@ public class ProductService : IProductService
         };
         // Lägger även till boken i boklistan.
         _products.Add(product);
-        Console.WriteLine($"Du har lagt till produkten ´{name}´.");
-        Console.WriteLine("Tryck valfri tangent för att fortsätta...");
-        Console.ReadKey();
+        Console.WriteLine($"Du har lagt till produkten '{name}'.");
     }
     // Metod som visar alla böcker i boklistan.
     public void ShowProducts()

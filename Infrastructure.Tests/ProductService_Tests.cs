@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Xunit;
+using System.IO;
 using System.Linq;
 using Infrastructure.Interfaces;
 using Infrastructure.Repositories;
@@ -8,64 +9,33 @@ namespace Infrastructure.Tests;
 
 public class ProductService_Tests
 {
-    private readonly string _testFilePath = "test_products.json";
-    // Konstruktor som kör varje test för att börja rent.
-    // (om json filen existerar så tas den bort)
-    public ProductService_Tests()
-    {
-        if (File.Exists(_testFilePath))
-            File.Delete(_testFilePath);
-    }
+
 
     [Fact]
-    // Testar att produkterna läggs till i listan,
-    // om de görs det så returnera sant.
+    // Enhetstest som kollar att det går att lägga in produkter i listan.
     public void AddProductToList_ShouldAddProductToList_ReturnTrue()
     {
-        // Arrange - förberedelser
-        var repo = new JsonFileRepository("test_products.json");
-        var productService = new ProductService(repo);
-        // Act - utförandet
-        productService.AddProduct("Testprodukt", 1000M);
+        // Arrange - Gör alla förberedelser.
+        // Skapar en filväg till en ny JSON fil som är menat för testet.
+        var testFilePath = Path.Combine(AppContext.BaseDirectory, "Data", "test_products.json");
+        // Om fil på filvägen finns...
+        if (File.Exists(testFilePath))
+            // Filen tas bort.
+            File.Delete(testFilePath);
+        // Skapar en instans av servicen och repositoryt, för att använda productservice metoder
+        IJsonFileRepository testRepo = new JsonFileRepository("test_products.json");
+        IProductService productService = new ProductService(testRepo);
+
+        // Act - Utförandet (Kör funktionen som jag vill testa)
+        productService.AddProduct("Iphone 17", 10995);
         var products = productService.GetProducts();
-        // Assert - result / utfall
-        // Ska finnas en produkt.
+
+        // Assert - Resultatet (Kontrollerar att jag fick det resultatet som jag förvantade mig).
+        // Det ska bara finnas en produkt i produktlistan.
         Assert.Single(products);
-        Assert.Equal("Testprodukt", products[0].Name);
-        Assert.Equal(1000M, products[0].Price);
-        // Guid kan inte vara tom.
-        Assert.NotEqual(System.Guid.Empty, products[0].Id);
-    }
-    public void SaveAndLoadProductsToList_ShouldPersistData()
-    {
-        // Arrange - Förbered instanserna och det du behöver för att testa.
-        var repo = new JsonFileRepository(_testFilePath);
-        var productService = new ProductService(repo);
-        // Act
-        productService.AddProduct("Kaffe", 30.90M);
-        productService.SaveProductsToFile();
-
-        // Ny service för att simulera en ny användarsession.
-        var newService = new ProductService(repo);
-        newService.LoadProductsFromFile();
-        var loaded = productService.GetProducts();
-        // Assert
-        Assert.Single(loaded);
-        Assert.Equal("Kaffe", loaded[0].Name);
-        Assert.Equal(30.90M, loaded[0].Price);
-    }
-    // Metod som testar att produkterna läggs
-    public void AddProduct_ShouldRejectInvalidInput()
-    {
-
-        var repo = new JsonFileRepository(_testFilePath);
-        var productService = new ProductService(repo);
-
-        productService.AddProduct("", 30);
-        productService.AddProduct("Kaffe", -5);
-        var products = productService.GetProducts();
-        // Assert
-        Assert.Empty(products);
-
+        // Produktens namns ska vara Iphone 17.
+        Assert.Equal("Iphone 17", products[0].Name);
+        // Produktens pris ska vara 10995.
+        Assert.Equal(10995, products[0].Price);
     }
 }
